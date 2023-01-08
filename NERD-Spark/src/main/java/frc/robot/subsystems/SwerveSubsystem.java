@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.constraint.SwerveDriveKinematicsConstraint;
 import edu.wpi.first.wpilibj.SPI;
@@ -54,9 +55,13 @@ public class SwerveSubsystem extends SubsystemBase {
             DriveConstants.kBackRightDriveCANCoderReversed);
 
     private final Pigeon2 gyro = new Pigeon2(Constants.pigeonPort);
-
     private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(DriveConstants.kDriveKinematics,
-            new Rotation2d(0));
+            new Rotation2d(0), new SwerveModulePosition[] {
+                frontLeft.getSwerveModulePosition(), 
+                frontRight.getSwerveModulePosition(),
+                backLeft.getSwerveModulePosition(),
+                backRight.getSwerveModulePosition()
+            });
 
     public SwerveSubsystem() {
         new Thread(() -> {
@@ -85,13 +90,17 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public void resetOdometry(Pose2d pose) {
-        odometer.resetPosition(pose, getRotation2d());
+        odometer.resetPosition(getRotation2d(), new SwerveModulePosition[4], pose);
     }
 
     @Override
     public void periodic() {
-        odometer.update(getRotation2d(), frontLeft.getState(), frontRight.getState(), backLeft.getState(),
-                backRight.getState());
+        odometer.update(getRotation2d(), new SwerveModulePosition[] {
+                frontLeft.getSwerveModulePosition(), 
+                frontRight.getSwerveModulePosition(),
+                backLeft.getSwerveModulePosition(),
+                backRight.getSwerveModulePosition()
+        });
         SmartDashboard.putNumber("Robot Heading", getHeading());
         SmartDashboard.putString("Robot Location (broken)", getPose().getTranslation().toString());
         SmartDashboard.putNumber("X pos", odometer.getPoseMeters().getX());
