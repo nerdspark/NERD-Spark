@@ -12,11 +12,15 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.PoseEstimatorSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import java.util.List;
+
+import org.photonvision.PhotonCamera;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -30,6 +34,10 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
+
+import frc.robot.commands.ChaseTagCommand;
+import edu.wpi.first.wpilibj2.command.button.Button;
+
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -46,6 +54,14 @@ public class RobotContainer {
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
 
   private final Joystick driverJoystick = new Joystick(OIConstants.kDriverControllerPort);
+
+  //For Vision
+
+  private final PhotonCamera photonCamera = new PhotonCamera("photonvision");
+  private final PoseEstimatorSubsystem poseEstimator = new PoseEstimatorSubsystem(photonCamera, swerveSubsystem);
+  private final ChaseTagCommand chaseTagCommand = 
+      new ChaseTagCommand(photonCamera, swerveSubsystem, poseEstimator::getCurrentPose);
+
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -73,6 +89,10 @@ public class RobotContainer {
     new JoystickButton(cont, Constants.buttonA).whileHeld(new ExampleCommand(m_exampleSubsystem));
     new JoystickButton(driverJoystick, Constants.buttonY).whenPressed(() -> swerveSubsystem.zeroHeading());
 
+    //For Vision
+    // new JoystickButton(cont, Constants.buttonY).whileHeld(chaseTagCommand);
+
+
   }
 
   /**
@@ -82,6 +102,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // 1. Create trajectory settings
+    swerveSubsystem.resetOdometry(new Pose2d());
     TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
             AutoConstants.kMaxSpeedMetersPerSecond,
             AutoConstants.kMaxAccelerationMetersPerSecondSquared)
@@ -91,9 +112,9 @@ public class RobotContainer {
     Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
             new Pose2d(0, 0, new Rotation2d(0)),
             List.of(
-                    new Translation2d(0.5, 0),
-                    new Translation2d(0.5, -0.5)),
-            new Pose2d(1, -0.5, Rotation2d.fromDegrees(0)),
+                    new Translation2d(1, 0),
+                    new Translation2d(1, 1)),
+            new Pose2d(0, 1, Rotation2d.fromDegrees(0)),
             trajectoryConfig);
 
     // 3. Define PID controllers for tracking trajectory

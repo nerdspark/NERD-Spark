@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.sensors.Pigeon2;
 
+
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -16,6 +18,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
+
+//For Vision
+
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 
 public class SwerveSubsystem extends SubsystemBase {
     private final SwerveModule frontLeft = new SwerveModule(
@@ -90,7 +97,12 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public void resetOdometry(Pose2d pose) {
-        odometer.resetPosition(getRotation2d(), new SwerveModulePosition[4], pose);
+        odometer.resetPosition(getRotation2d(), new SwerveModulePosition[] {
+            new SwerveModulePosition(), 
+            new SwerveModulePosition(), 
+            new SwerveModulePosition(), 
+            new SwerveModulePosition()
+    }, pose);
     }
 
     @Override
@@ -114,19 +126,26 @@ public class SwerveSubsystem extends SubsystemBase {
         backRight.stop();
     }
 
+    public void setGains() {
+        frontLeft.setGains();
+        frontRight.setGains();
+        backLeft.setGains();
+        backRight.setGains();
+    }
+
     public void setModuleStates(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
  
-        // if (!((Math.abs(desiredStates[0].angle.getRadians() + frontLeft.getTurningPosition())<0.5) 
-        // && (Math.abs(desiredStates[1].angle.getRadians() + frontRight.getTurningPosition())<0.5)
-        // && (Math.abs(desiredStates[2].angle.getRadians() + backLeft.getTurningPosition())<0.5)
-        // && (Math.abs(desiredStates[3].angle.getRadians() + backRight.getTurningPosition())<0.5)))
-        // {
-        //     desiredStates[0] = new SwerveModuleState(0, desiredStates[0].angle);
-        //     desiredStates[1] = new SwerveModuleState(0, desiredStates[1].angle);
-        //     desiredStates[2] = new SwerveModuleState(0, desiredStates[2].angle);
-        //     desiredStates[3] = new SwerveModuleState(0, desiredStates[3].angle);
-        // }
+        if (false)//((Math.abs(desiredStates[0].angle.getRadians() - frontLeft.getTurningPosition())>15*Math.PI/180) 
+        // || (Math.abs(desiredStates[1].angle.getRadians() -frontRight.getTurningPosition())>15*Math.PI/180)
+        // || (Math.abs(desiredStates[2].angle.getRadians() - backLeft.getTurningPosition())>15*Math.PI/180)
+        // || (Math.abs(desiredStates[3].angle.getRadians() - backRight.getTurningPosition())>15*Math.PI/180)))
+        {
+            desiredStates[0] = new SwerveModuleState(0, desiredStates[0].angle);
+            desiredStates[1] = new SwerveModuleState(0, desiredStates[1].angle);
+            desiredStates[2] = new SwerveModuleState(0, desiredStates[2].angle);
+            desiredStates[3] = new SwerveModuleState(0, desiredStates[3].angle);
+        }
 
         frontLeft.setDesiredState(desiredStates[0]);
         frontRight.setDesiredState(desiredStates[1]);
@@ -135,4 +154,26 @@ public class SwerveSubsystem extends SubsystemBase {
             
         
     }
-}
+
+    //For Vision
+
+    public Rotation2d getGyroscopeRotation() {
+        // We have to invert the angle of the NavX so that rotating the robot counter-clockwise makes the angle increase.
+        // return Rotation2d.fromDegrees(360.0 - navx.getYaw());
+        return Rotation2d.fromDegrees(360.0 - gyro.getYaw());
+           
+    }
+
+    public SwerveModulePosition[] getServeModulePositions(){
+
+        return new SwerveModulePosition[]{
+            
+            frontLeft.getSwerveModulePosition(), 
+            frontRight.getSwerveModulePosition(),
+            backLeft.getSwerveModulePosition(),
+            backRight.getSwerveModulePosition()
+        };
+    } 
+
+
+  }
