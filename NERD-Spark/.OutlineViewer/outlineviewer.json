@@ -1,0 +1,20 @@
+{
+  "Connections": {
+    "open": true
+  },
+  "NetworkTables Settings": {
+    "mode": "Client (NT3)",
+    "serverTeam": "9312"
+  },
+  "transitory": {
+    "CameraPublisher": {
+      "open": true
+    },
+    "photonvision": {
+      "open": true,
+      "photonvision": {
+        "open": true
+      }
+    }
+  }
+}

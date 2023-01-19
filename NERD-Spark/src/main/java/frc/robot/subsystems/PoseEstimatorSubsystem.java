@@ -25,9 +25,11 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
+import frc.robot.FieldConstants;
 //for Vision
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.apriltag.AprilTag;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
 
 
 public class PoseEstimatorSubsystem extends SubsystemBase {
@@ -35,11 +37,24 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
   private final PhotonCamera photonCamera;
   private final SwerveSubsystem drivetrainSubsystem;
 
+  private static final List<AprilTag> aprTagList = FieldConstants.aprilTagList;
   // Ordered list of target poses by ID (WPILib is adding some functionality for
   // this)
   private static final List<Pose2d> targetPoses = Collections.unmodifiableList(List.of(
-      new Pose2d(Units.inchesToMeters(84), Units.inchesToMeters(39.4375), Rotation2d.fromDegrees(180)),
-      new Pose2d(Units.inchesToMeters(84), 0.0, Rotation2d.fromDegrees(180))));
+      new Pose2d(aprTagList.get(1).pose.getX(), aprTagList.get(1).pose.getY(),aprTagList.get(1).pose.getRotation().toRotation2d()),
+      new Pose2d(aprTagList.get(2).pose.getX(), aprTagList.get(2).pose.getY(),aprTagList.get(2).pose.getRotation().toRotation2d()),
+      new Pose2d(aprTagList.get(2).pose.getX(), aprTagList.get(3).pose.getY(),aprTagList.get(2).pose.getRotation().toRotation2d()),
+      new Pose2d(aprTagList.get(2).pose.getX(), aprTagList.get(4).pose.getY(),aprTagList.get(2).pose.getRotation().toRotation2d()),
+      new Pose2d(aprTagList.get(2).pose.getX(), aprTagList.get(5).pose.getY(),aprTagList.get(2).pose.getRotation().toRotation2d()),
+      new Pose2d(aprTagList.get(2).pose.getX(), aprTagList.get(6).pose.getY(),aprTagList.get(2).pose.getRotation().toRotation2d()),
+      new Pose2d(aprTagList.get(2).pose.getX(), aprTagList.get(7).pose.getY(),aprTagList.get(2).pose.getRotation().toRotation2d()),
+      new Pose2d(aprTagList.get(2).pose.getX(), aprTagList.get(8).pose.getY(),aprTagList.get(2).pose.getRotation().toRotation2d())
+  
+      
+      ));
+
+
+  
       
   // Kalman Filter Configuration. These can be "tuned-to-taste" based on how much
   // you trust your various sensors. Smaller numbers will cause the filter to

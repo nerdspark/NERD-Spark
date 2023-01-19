@@ -1,10 +1,6 @@
-// Copyright (c) 2023 FRC 6328
-// http://github.com/Mechanical-Advantage
-//
-// Use of this source code is governed by an MIT-style
-// license that can be found in the LICENSE file at
-// the root directory of this project.
 package frc.robot;
+import edu.wpi.first.apriltag.AprilTag;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -14,6 +10,10 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -189,7 +189,7 @@ public final class FieldConstants {
   }
 
   // AprilTag locations (do not flip for red alliance)
-  public static final Map<Integer, Pose3d> aprilTags =
+  public static final Map<Integer, Pose3d> aprilTags3D =
       Map.of(
           1,
           new Pose3d(
@@ -239,6 +239,23 @@ public final class FieldConstants {
               Units.inchesToMeters(42.19),
               Units.inchesToMeters(18.22),
               new Rotation3d()));
+
+
+          public static final  AprilTag tag1 = new AprilTag(1,FieldConstants.aprilTags3D.get(1));
+          public static final  AprilTag tag2 = new AprilTag(2,FieldConstants.aprilTags3D.get(2));
+          public static final  AprilTag tag3 = new AprilTag(3,FieldConstants.aprilTags3D.get(3));
+          public static final  AprilTag tag4 = new AprilTag(4,FieldConstants.aprilTags3D.get(4));
+          public static final  AprilTag tag5 = new AprilTag(5,FieldConstants.aprilTags3D.get(5));
+          public static final  AprilTag tag6 = new AprilTag(6,FieldConstants.aprilTags3D.get(6));
+          public static final  AprilTag tag7 = new AprilTag(7,FieldConstants.aprilTags3D.get(7));
+          public static final  AprilTag tag8 = new AprilTag(8,FieldConstants.aprilTags3D.get(8));
+
+          public static final List<AprilTag> aprilTagList = Collections.unmodifiableList(List.of(         
+            tag1, tag2,tag3,tag4,tag5,tag6,tag7,tag8
+          ));
+      
+          public static final  AprilTagFieldLayout atfl =
+          new AprilTagFieldLayout(aprilTagList, FieldConstants.fieldLength, FieldConstants.fieldWidth);
 
   /**
    * Flips a translation to the correct side of the field based on the current alliance color. By

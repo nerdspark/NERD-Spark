@@ -4,38 +4,44 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.ctre.phoenix.sensors.CANCoder;
-import com.revrobotics.SparkMaxAlternateEncoder;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 
 public class ExampleSubsystem extends SubsystemBase {
-
-  CANCoder sensor1;
-
-  TalonFX motor1;
   /** Creates a new ExampleSubsystem. */
-  public ExampleSubsystem() {
-    sensor1 = new CANCoder(Constants.sensor1ID);
-    motor1 = new TalonFX(Constants.motorr1ID);
+  public ExampleSubsystem() {}
+
+  /**
+   * Example command factory method.
+   *
+   * @return a command
+   */
+  public CommandBase exampleMethodCommand() {
+    // Inline construction of command goes here.
+    // Subsystem::RunOnce implicitly requires `this` subsystem.
+    return runOnce(
+        () -> {
+          /* one-time action goes here */
+          SmartDashboard.putNumber("Running exampleSubsystem", 9999999);
+        });
+  }
+
+  /**
+   * An example method querying a boolean state of the subsystem (for example, a digital sensor).
+   *
+   * @return value of some boolean subsystem state, such as a digital sensor.
+   */
+  public boolean exampleCondition() {
+    // Query some boolean state, such as a digital sensor.
+    return false;
   }
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("sensor position", sensor1.getAbsolutePosition());
+    // This method will be called once per scheduler run
   }
 
-  public void runMotor(double power) {
-    motor1.set(TalonFXControlMode.PercentOutput, power);
-  }
-
-  // public void printSensor() {
-    // SmartDashboard.putNumber("sensor position", sensor1.getAbsolutePosition());
-  // }
   @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation

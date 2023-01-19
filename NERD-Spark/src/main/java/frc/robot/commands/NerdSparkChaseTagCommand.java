@@ -15,14 +15,13 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SwerveSubsystem;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.Constants.DriveConstants;
 
 
-public class ChaseTagCommand extends CommandBase {
+public class NerdSparkChaseTagCommand extends CommandBase {
   
   private static final TrapezoidProfile.Constraints X_CONSTRAINTS = new TrapezoidProfile.Constraints(2, 2);
   private static final TrapezoidProfile.Constraints Y_CONSTRAINTS = new TrapezoidProfile.Constraints(2, 2);
@@ -43,7 +42,7 @@ public class ChaseTagCommand extends CommandBase {
   private Pose2d goalPose;
   private PhotonTrackedTarget lastTarget;
 
-  public ChaseTagCommand(
+  public NerdSparkChaseTagCommand(
         PhotonCamera photonCamera, 
         SwerveSubsystem drivetrainSubsystem,
         Supplier<Pose2d> poseProvider) {
@@ -125,15 +124,7 @@ public class ChaseTagCommand extends CommandBase {
     ChassisSpeeds chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
         xSpeed, ySpeed, omegaSpeed, drivetrainSubsystem.getRotation2d());
     SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
-    // drivetrainSubsystem.setModuleStates(moduleStates);
-    SmartDashboard.putNumber("Y pos", robotPose.getY());
-    SmartDashboard.putNumber("X pos", robotPose.getX());
-    SmartDashboard.putNumber("Robot Rotation", robotPose.getRotation().getDegrees());
-    
-    SmartDashboard.putNumber("Goal Rotation", goalPose.getRotation().getDegrees());
-    SmartDashboard.putNumber("Goal X", goalPose.getX());
-    SmartDashboard.putNumber("Goal Y", goalPose.getY());
-
+    drivetrainSubsystem.setModuleStates(moduleStates);
 
   }
 
