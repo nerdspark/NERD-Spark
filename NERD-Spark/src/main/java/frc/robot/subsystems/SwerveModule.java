@@ -1,24 +1,16 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.CAN;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
-import frc.robot.Constants.OIConstants;
 
 public class SwerveModule {
 
@@ -33,16 +25,16 @@ public class SwerveModule {
     private final CANCoder CANCoder;
     private final boolean CANCoderReversed;
     private final double CANCoderOffsetRad;
-
+    public double angle;
     public SwerveModule(int driveMotorId, int turningMotorId, boolean driveMotorReversed, boolean turningMotorReversed,
             int CANCoderId, double CANCoderOffset, boolean CANCoderReversed) {
 
         this.CANCoderOffsetRad = CANCoderOffset;
         this.CANCoderReversed = CANCoderReversed;
-        CANCoder = new CANCoder(CANCoderId);
+        CANCoder = new CANCoder(CANCoderId, DriveConstants.canBusName);
 
-        driveMotor = new TalonFX(driveMotorId);
-        turningMotor = new TalonFX(turningMotorId);
+        driveMotor = new TalonFX(driveMotorId, DriveConstants.canBusName);
+        turningMotor = new TalonFX(turningMotorId, DriveConstants.canBusName);
 
         driveMotor.setInverted(driveMotorReversed);
         turningMotor.setInverted(turningMotorReversed);
@@ -127,18 +119,19 @@ public class SwerveModule {
     }
 
     public double getCANCoderRad() {
-        double angle = CANCoder.getAbsolutePosition();
+        angle = CANCoder.getAbsolutePosition();
         angle *= 2.0 * Math.PI / 360;
         angle -= CANCoderOffsetRad;
         return angle * (CANCoderReversed ? -1.0 : 1.0);
     }
 
     public void resetEncoders() {
+        CANCoder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToAbsolutePosition);
         driveMotor.setSelectedSensorPosition(0);
         turningMotor.setSelectedSensorPosition(getCANCoderRad() / ModuleConstants.kTurnTicks2Radians);
-        turningMotor.config_kP(1, DriveConstants.kPTurningMotor);
-        turningMotor.config_kI(1, DriveConstants.kITurningMotor);
-        turningMotor.config_kD(1, DriveConstants.kDTurningMotor);
+        // turningMotor.config_kP(1, DriveConstants.kPTurningMotor);
+        // turningMotor.config_kI(1, DriveConstants.kITurningMotor);
+        // turningMotor.config_kD(1, DriveConstants.kDTurningMotor);
         turningMotor.selectProfileSlot(0, 0);
         // driveMotor.config_kP(1, DriveConstants.kPDriveMotor);
         // driveMotor.config_kI(1, DriveConstants.kIDriveMotor);
@@ -147,13 +140,14 @@ public class SwerveModule {
         driveMotor.selectProfileSlot(0, 0);
         // turningMotor.selectProfileSlot(0, 0);
         driveMotor.configClosedloopRamp(DriveConstants.kRampRateDriveMotor);
-        turningMotor.configClosedloopRamp(DriveConstants.kRampRateTurningMotor);
+        driveMotor.configOpenloopRamp(DriveConstants.kRampRateDriveMotor);
+        turningMotor.configClosedloopRamp(0.01);//DriveConstants.kRampRateTurningMotor);
     }
 
     public void setGains() {
-        turningMotor.config_kP(1, DriveConstants.kPTurningMotor);
-        turningMotor.config_kI(1, DriveConstants.kITurningMotor);
-        turningMotor.config_kD(1, DriveConstants.kDTurningMotor);
+        // turningMotor.config_kP(1, DriveConstants.kPTurningMotor);
+        // turningMotor.config_kI(1, DriveConstants.kITurningMotor);
+        // turningMotor.config_kD(1, DriveConstants.kDTurningMotor);
         turningMotor.selectProfileSlot(0, 0);
         // driveMotor.config_kP(1, DriveConstants.kPDriveMotor);
         // driveMotor.config_kI(1, DriveConstants.kIDriveMotor);
@@ -162,7 +156,8 @@ public class SwerveModule {
         driveMotor.selectProfileSlot(0, 0);
         // turningMotor.selectProfileSlot(0, 0);
         driveMotor.configClosedloopRamp(DriveConstants.kRampRateDriveMotor);
-        turningMotor.configClosedloopRamp(DriveConstants.kRampRateTurningMotor);
+        driveMotor.configOpenloopRamp(DriveConstants.kRampRateDriveMotor);
+        turningMotor.configClosedloopRamp(0.01);//DriveConstants.kRampRateTurningMotor);
         
     }
 
