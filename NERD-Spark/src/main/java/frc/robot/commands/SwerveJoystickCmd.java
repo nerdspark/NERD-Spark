@@ -89,16 +89,16 @@ public class SwerveJoystickCmd extends CommandBase {
 
         targetTurnController.enableContinuousInput(-Math.PI, Math.PI);
         turningSpeed = targetTurnController.calculate(currentAngle, targetAngle);
-        SmartDashboard.putString("PID turning?", "yes");
+     //   SmartDashboard.putString("PID turning?", "yes");
         if (((Math.abs(targetAngle - currentAngle) < DriveConstants.kTargetTurningDeadband)/* && !SwerveSubsystem.driveTurning*/) || cancelTurn.get()) {
             turningSpeed = 0;
-            SmartDashboard.putString("PID turning?", "disabled");
+      //      SmartDashboard.putString("PID turning?", "disabled");
         }
 
         if (Math.abs(turningTargX.get()) > OIConstants.kDeadbandSteer) {
             targetAngle = currentAngle;
             turningSpeed = turningTargX.get() * OIConstants.joystickTurningGain;
-            SmartDashboard.putString("PID turning?", "joystickturning");
+       //     SmartDashboard.putString("PID turning?", "joystickturning");
         } 
         
         // 2. Apply deadband
@@ -106,9 +106,9 @@ public class SwerveJoystickCmd extends CommandBase {
         if (/*Math.abs(xSpdFunction.get() * xSpdFunction.get()) + Math.abs(ySpdFunction.get() * ySpdFunction.get()) < (OIConstants.kDeadbandDrive * OIConstants.kDeadbandDrive)) {*/Math.abs(xSpdFunction.get()) < OIConstants.kDeadbandDrive && Math.abs(ySpdFunction.get()) < OIConstants.kDeadbandDrive) {
             xSpeed = 0;
             ySpeed = 0;
-            SmartDashboard.putString("in drive deadband", "yes");
+        //    SmartDashboard.putString("in drive deadband", "yes");
         } else {
-            SmartDashboard.putString("in drive deadband", "no");
+        //    SmartDashboard.putString("in drive deadband", "no");
 
         }
 
@@ -118,10 +118,10 @@ public class SwerveJoystickCmd extends CommandBase {
         turningSpeed = turningLimiter.calculate(turningSpeed)
                 * DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
         if ((xSpeed*xSpeed)+(ySpeed*ySpeed) > OIConstants.targetTurnGainScheduleSpeed) {
-            SmartDashboard.putString("targetTurnGain", "fastGain");
+        //    SmartDashboard.putString("targetTurnGain", "fastGain");
             turningSpeed = turningSpeed * 1;
         } else {
-            SmartDashboard.putString("targetTurnGain", "slowGain");
+     //       SmartDashboard.putString("targetTurnGain", "slowGain");
         }
         // 4. Construct desired chassis speeds
         ChassisSpeeds chassisSpeeds;

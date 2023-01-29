@@ -62,7 +62,7 @@ public class SwerveSubsystem extends SubsystemBase {
                 backLeft.getSwerveModulePosition(),
                 backRight.getSwerveModulePosition()
             });
-
+            
     public SwerveSubsystem() {
         new Thread(() -> {
             try {
@@ -107,10 +107,10 @@ public class SwerveSubsystem extends SubsystemBase {
                 backLeft.getSwerveModulePosition(),
                 backRight.getSwerveModulePosition()
         });
-        SmartDashboard.putNumber("Robot Heading", getHeading());
-        SmartDashboard.putString("Robot Location (broken)", getPose().getTranslation().toString());
-        SmartDashboard.putNumber("X pos", odometer.getPoseMeters().getX());
-        SmartDashboard.putNumber("Y pos", odometer.getPoseMeters().getY());
+        // SmartDashboard.putNumber("Robot Heading", getHeading());
+        // SmartDashboard.putString("Robot Location (broken)", getPose().getTranslation().toString());
+        // SmartDashboard.putNumber("X pos", odometer.getPoseMeters().getX());
+        // SmartDashboard.putNumber("Y pos", odometer.getPoseMeters().getY());
         frontLeft.outputStatsSmartDashboard();
         backLeft.outputStatsSmartDashboard();
         frontRight.outputStatsSmartDashboard();
@@ -169,6 +169,26 @@ public class SwerveSubsystem extends SubsystemBase {
         backLeft.setDesiredState(desiredStates[2]);
         backRight.setDesiredState(desiredStates[3]);
             
-        
+ 
+  }
+
+  public SwerveModulePosition[] getModulePositions (){
+    return new SwerveModulePosition[] {
+        frontLeft.getSwerveModulePosition(), frontRight.getSwerveModulePosition(),
+        backLeft.getSwerveModulePosition(), backRight.getSwerveModulePosition()
+        };
     }
+
+    public void resetGyro(){
+        zeroHeading();
+    }
+
+    //May need to change
+    //We have to invert the angle of gyro so that rotating the robot counter-clockwise makes angle increase
+
+    public Rotation2d getGyroRotation(){
+        return Rotation2d.fromDegrees(360.0 - gyro.getYaw());
+    }
+
+
 }

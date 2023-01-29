@@ -8,15 +8,24 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.AprTagCommand;
+import frc.robot.commands.ConeVisionCommand;
+import frc.robot.commands.CubeVisionCommand;
+import frc.robot.commands.FindMultipleAprilTags;
 import frc.robot.commands.SwerveJoystickCmd;
+import frc.robot.subsystems.ConeVisionSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import java.util.List;
+
+import org.photonvision.PhotonCamera;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -38,14 +47,28 @@ import frc.robot.Constants.DriveConstants;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
-  private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 	private static final XboxController cont = new XboxController(Constants.controllerPort);
-
   private static final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
 
+  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  private final PhotonCamera photonCameraConeVision = new PhotonCamera(Constants.VisionConstants.coneCameraName);
+
+  private final ConeVisionSubsystem m_coneVisionSubsystem = new ConeVisionSubsystem(photonCameraConeVision);
+  private final PhotonCamera photonCamera = new PhotonCamera(Constants.VisionConstants.aprTagCameraName);
+
+  private final ConeVisionCommand  coneVisionCommand= new ConeVisionCommand(m_coneVisionSubsystem);
+
+  private final CubeVisionCommand  cubeVisionCommand= new CubeVisionCommand(m_coneVisionSubsystem);
+
+  private final FindMultipleAprilTags aprTagCommandMultiple = new FindMultipleAprilTags(photonCamera,m_exampleSubsystem,1);
+
+  private final ExampleCommand exampleCommand = new ExampleCommand(m_exampleSubsystem);
+  private final AprTagCommand aprTagCommand = new AprTagCommand(photonCamera,m_exampleSubsystem,2);
+
+
   private final Joystick driverJoystick = new Joystick(OIConstants.kDriverControllerPort);
+
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -73,7 +96,12 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(cont, Constants.buttonA).whileHeld(new ExampleCommand(m_exampleSubsystem));
+
+    SmartDashboard.putString("Config", "Button Bindings");
+    new JoystickButton(driverJoystick, Constants.buttonA).onTrue(aprTagCommand);
+    new JoystickButton(driverJoystick, Constants.buttonB).onTrue(coneVisionCommand);
+    new JoystickButton(driverJoystick, Constants.buttonX).onTrue(cubeVisionCommand);
+
   }
 
   /**

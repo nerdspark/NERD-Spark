@@ -25,7 +25,7 @@ public class ExampleSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("sensor position", sensor1.getAbsolutePosition());
+   // SmartDashboard.putNumber("sensor position", sensor1.getAbsolutePosition());
   }
 
   public void runMotor(double power) {
