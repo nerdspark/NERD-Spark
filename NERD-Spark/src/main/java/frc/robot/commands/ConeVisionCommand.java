@@ -65,6 +65,7 @@ public class ConeVisionCommand extends CommandBase {
           SmartDashboard.putNumber("ConePipeLine Target Yaw", m_subsystem.getSkewVal());
           SmartDashboard.putNumber("ConePipeLine Target Area", m_subsystem.getAreVal());
           SmartDashboard.putNumber("ConePipeLine Target Pitch", m_subsystem.getPitchVal());
+        
 
           this.targetFound = true;
           

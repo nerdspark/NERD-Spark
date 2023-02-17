@@ -217,7 +217,7 @@ public static class VisionConstants {
                             0, 0,
                             0)); // Cam mounted facing forward, half a meter forward of center, half a meter up
     // from center.
-   public static final String aprTagCameraName = "Arducam_OV9281_USB_Camera";
+   public static final String aprTagCameraName = "photonvision";
    public static final String coneCameraName = "USB_Web_Camera";
 
    public static final double CAMERA_HEIGHT_METERS = 0.168;

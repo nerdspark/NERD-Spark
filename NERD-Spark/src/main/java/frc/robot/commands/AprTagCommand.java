@@ -29,6 +29,7 @@ public class AprTagCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final ExampleSubsystem m_subsystem;
   public PhotonCamera photonCamera;
+  
   private int tagToChase = 0;
   private boolean aprTagFound = false;
   private Pose2d goalPose = null;
@@ -57,6 +58,7 @@ public class AprTagCommand extends CommandBase {
     goalPose = null;
     lastTarget = null;
     SmartDashboard.putNumber("AprTagPipeLine INIT", this.tagToChase);  
+   
   }
 
   // Called every time the scheduler runs while the command is scheduled.

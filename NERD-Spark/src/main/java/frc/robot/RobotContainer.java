@@ -16,9 +16,11 @@ import frc.robot.commands.ConeVisionCommand;
 import frc.robot.commands.CubeVisionCommand;
 import frc.robot.commands.FindMultipleAprilTags;
 import frc.robot.commands.SwerveJoystickCmd;
+import frc.robot.commands.TimeOfFlightCmd;
 import frc.robot.subsystems.ConeVisionSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.TimeOfFlightSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -56,6 +58,7 @@ public class RobotContainer {
 
   private final ConeVisionSubsystem m_coneVisionSubsystem = new ConeVisionSubsystem(photonCameraConeVision);
   private final PhotonCamera photonCamera = new PhotonCamera(Constants.VisionConstants.aprTagCameraName);
+    
 
   private final ConeVisionCommand  coneVisionCommand= new ConeVisionCommand(m_coneVisionSubsystem);
 
@@ -66,6 +69,8 @@ public class RobotContainer {
   private final ExampleCommand exampleCommand = new ExampleCommand(m_exampleSubsystem);
   private final AprTagCommand aprTagCommand = new AprTagCommand(photonCamera,m_exampleSubsystem,2);
 
+  private final TimeOfFlightSubsystem timeOfFlightSubsystem = new TimeOfFlightSubsystem();
+  private final TimeOfFlightCmd timeOfFlightCmd = new TimeOfFlightCmd(timeOfFlightSubsystem);
 
   private final Joystick driverJoystick = new Joystick(OIConstants.kDriverControllerPort);
 
@@ -101,6 +106,8 @@ public class RobotContainer {
     new JoystickButton(driverJoystick, Constants.buttonA).onTrue(aprTagCommand);
     new JoystickButton(driverJoystick, Constants.buttonB).onTrue(coneVisionCommand);
     new JoystickButton(driverJoystick, Constants.buttonX).onTrue(cubeVisionCommand);
+    new JoystickButton(driverJoystick, Constants.buttonY).onTrue(timeOfFlightCmd);
+
 
   }
 

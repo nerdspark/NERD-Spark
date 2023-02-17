@@ -2,6 +2,9 @@ package frc.robot.commands;
 
 import java.util.function.Supplier;
 
+import org.photonvision.PhotonCamera;
+
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -9,6 +12,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
 import frc.robot.Constants.OIConstants;
@@ -16,6 +20,8 @@ import frc.robot.subsystems.SwerveSubsystem;
 
 public class SwerveJoystickCmd extends CommandBase {
 
+    public PhotonCamera photonCamera;
+    
     private final SwerveSubsystem swerveSubsystem;
     private final Supplier<Double> xSpdFunction, ySpdFunction, turningTargX, turningTargY;
     private final Supplier<Boolean> fieldOrientedFunction, resetGyroButton, cancelTurn, topSpeed;
@@ -49,11 +55,17 @@ public class SwerveJoystickCmd extends CommandBase {
 
     @Override
     public void initialize() {
+        photonCamera = new PhotonCamera("Arducam_OV9281_USB_Camera");
         // swerveSubsystem.setGains();
+        CameraServer.startAutomaticCapture();
+        photonCamera.setDriverMode(true);
+
     }
 
     @Override
     public void execute() {
+
+
         // 1. Get real-time joystick inputs
         double driveAngle = Math.atan2(ySpdFunction.get(), xSpdFunction.get());
         // double driveSpeed = speedLimiter.calculate(OIConstants.driverMultiplier*Math.pow(Math.abs((ySpdFunction.get()*ySpdFunction.get()) + (xSpdFunction.get()*xSpdFunction.get())), OIConstants.driverPower/2)) * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond + OIConstants.driverBaseSpeedMetersPerSecond;
