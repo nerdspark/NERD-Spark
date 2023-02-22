@@ -163,10 +163,10 @@ public class SwerveModule {
     }
 
     public void setDesiredState(SwerveModuleState state) {
-        // if (Math.abs(state.speedMetersPerSecond) < 0.001) {
-        //     stop();
-        //     // return;
-        // }
+        if (Math.abs(state.speedMetersPerSecond) < 0.001) {
+            stop();
+            return;
+        }
         // state = SwerveModuleState.optimize(state, getState().angle);
 
         double target = state.angle.getRadians();
@@ -205,7 +205,7 @@ public class SwerveModule {
 
     public void stop() {
         driveMotor.set(TalonFXControlMode.PercentOutput, 0);
-        // turningMotor.set(TalonFXControlMode.PercentOutput, 0);
+        turningMotor.set(TalonFXControlMode.PercentOutput, 0);
     }
     
 }

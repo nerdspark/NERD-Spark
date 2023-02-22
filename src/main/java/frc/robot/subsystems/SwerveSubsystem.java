@@ -163,7 +163,7 @@ public class SwerveSubsystem extends SubsystemBase {
         //     desiredStates[2] = new SwerveModuleState(0, desiredStates[2].angle);
         //     desiredStates[3] = new SwerveModuleState(0, desiredStates[3].angle);
         // } else {
-            driveTurning = false;
+        // driveTurning = false;
         // }
 
         frontLeft.setDesiredState(desiredStates[0]);

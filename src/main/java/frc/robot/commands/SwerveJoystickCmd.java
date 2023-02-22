@@ -55,7 +55,7 @@ public class SwerveJoystickCmd extends CommandBase {
     @Override
     public void execute() {
         // 1. Get real-time joystick inputs
-        double driveAngle = Math.atan2(ySpdFunction.get(), xSpdFunction.get());
+        double driveAngle = Math.atan2(-ySpdFunction.get(), xSpdFunction.get());
         // double driveSpeed = speedLimiter.calculate(OIConstants.driverMultiplier*Math.pow(Math.abs((ySpdFunction.get()*ySpdFunction.get()) + (xSpdFunction.get()*xSpdFunction.get())), OIConstants.driverPower/2)) * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond + OIConstants.driverBaseSpeedMetersPerSecond;
         double driveSpeed = speedLimiter.calculate((topSpeed.get() ? OIConstants.driverTopEXPMultiplier : 
         ((leftTrigger.get() > 0.5) ? OIConstants.driverEXPMultiplier * 0.7 : OIConstants.driverEXPMultiplier))
@@ -98,7 +98,7 @@ public class SwerveJoystickCmd extends CommandBase {
 
         if (Math.abs(turningTargX.get()) > OIConstants.kDeadbandSteer) {
             targetAngle = currentAngle;
-            turningSpeed = turningTargX.get() * OIConstants.joystickTurningGain;
+            turningSpeed = -turningTargX.get() * OIConstants.joystickTurningGain;
             SmartDashboard.putString("PID turning?", "joystickturning");
         } 
         
